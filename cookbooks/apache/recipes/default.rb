@@ -6,13 +6,20 @@
 
 
 #Install apache
-package 'apache' do
-	package_name 'httpd'
+
+if node['platform_family'] == "rhel"
+	package = "httpd"
+elsif node['platform_family'] == "ubuntu"
+	package = "apache2"
+end
+
+package 'web-service' do
+	package_name package
 	action :install
 end
 #Start and enable service
 service 'apache' do
-	service_name 'httpd'
+	service_name package
 	action [:start, :enable]
 end
 
